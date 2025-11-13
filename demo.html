@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sathya | Web Demo</title>
+  <style>
+:root{
+  --bg:#0b0820;
+  --card-bg-solid: #0f1724;
+  --glass: #1a1a1a;
+  --accent: #6c3fd1;
+  --muted: #9aa0b2;
+  --carousel-radius: 400;
+  --slide-spacing: 80px;
+  --slide-width: min(360px, 75vw);
+  --slide-height: min(420px, 65vh);
+  --image-aspect-ratio: 16/9;
+}
+
+/* Reset & base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  min-height:100vh;
+  background: linear-gradient(180deg,var(--bg), #060411 60%);
+  color:#f4f6fb;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  overflow: hidden;
+}
+
+/* Background canvases (behind everything) */
+.bg-canvas{
+  position:fixed;
+  top:0; left:0;
+  width:100vw; height:100vh;
+  pointer-events:none;
+  z-index:0;
+  display:block;
+}
+
+/* Faux cursor */
+.faux-cursor{
+  position:fixed;
+  width:32px; height:32px;
+  border-radius:50%;
+  border:2px solid #ffffff;
+  transform:translate(-50%,-50%) scale(1);
+  pointer-events:none;
+  z-index:9999;
+  transition:transform .12s ease, opacity .12s ease;
+  opacity:1;
+  mix-blend-mode:normal;
+}
+
+/* Top-left brand */
+.topbar{
+  position:fixed;
+  top:12px; left:16px;
+  display:flex; align-items:center;
+  z-index:60; /* above carousel */
+}
+.brand{ font-weight:700; margin:0; font-size:17px; color:#fff; }
+
+/* Layout */
+.main{
+  position:relative;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:24px;
+  padding:56px 20px;
+  z-index:20; /* above canvases */
+}
+/* Carousel container */
+.carousel-wrap{
+  width: 100%;
+  max-width: 1400px;
+  height: min(75vh, 800px);
+  perspective: 2000px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  isolation: isolate;
+  z-index: 20;
+  padding: 0 20px;
+  margin-bottom: 150px;
+}
+
+/* Carousel slides */
+.carousel{
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style: preserve-3d;
+  transition: transform .6s cubic-bezier(.2,.8,.2,1);
+  z-index:10;
+}
+
+.carousel-slide{
+  position: absolute;
+  left: 50%; 
+  top: 50%;
+  width: var(--slide-width);
+  height: var(--slide-height);
+  transform: translate(-50%,-50%) translateZ(0);
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  background: var(--card-bg-solid);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+  color: white; 
+  text-align: center;
+  transition: transform .8s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+  user-select: none; 
+  cursor: grab;
+  transform-origin: center center;
+  overflow: hidden;
+}
+
+.carousel-slide .image-container {
+  width: 100%;
+  height: 75%;
+  overflow: hidden;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: var(--image-aspect-ratio);
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-slide .content-container {
+  width: 100%;
+  height: 25%;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  background: var(--card-bg-solid);
+  flex-shrink: 0;
+}
+
+.carousel-slide .slide-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: white;
+  margin: 0;
+}
+
+.carousel-slide .slide-desc {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.carousel-slide.portrait .image-container img {
+  object-fit: contain;
+  background: #000;
+}
+
+.carousel-slide.landscape .image-container img {
+  object-fit: contain;
+  background: #000;
+}
+
+.carousel-slide:active { cursor:grabbing; }
+.carousel-slide.active{
+  transform: translate(-50%,-50%) translateZ(160px) scale(1.06);
+  box-shadow: 0 28px 60px rgba(0,0,0,0.75), 0 2px 10px rgba(108,63,209,0.12);
+  z-index:30;
+  outline: 3px solid rgba(108,63,209,0.12);
+}
+
+/* Dots */
+.dot-nav{
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 95;
+  background: rgba(0,0,0,0.5);
+  padding: 6px 10px;
+  border-radius: 20px;
+}
+.dot{
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2a2a2a;
+  border: 0;
+  cursor: pointer;
+  transition: transform .18s, background .18s;
+}
+.dot.active{
+  transform: scale(1.3);
+  background: var(--accent);
+}
+
+/* Controls (bottom under gallery) */
+.controls-bottom {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 60px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 30px;
+  background: rgba(26, 26, 26, 0.95);
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 90vw;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+.controls-bottom button,
+.controls-bottom select{
+  background:transparent;
+  color:inherit;
+  border:0;
+  padding:8px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:15px;
+  transition: all 0.3s ease;
+}
+
+.controls-bottom select {
+  color: #9aa0b2;
+}
+
+.controls-bottom select option {
+  background: #0f1724;
+  color: #9aa0b2;
+}
+
+.controls-bottom button:hover,
+.controls-bottom select:hover {
+  background: rgba(108, 63, 209, 0.2);
+}
+
+#dragHint {
+  display: none;
+}
+
+/* Info panel */
+.info-panel{
+  width:300px;
+  max-width:30vw;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  border-radius:12px;
+  padding:18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  z-index:20;
+}
+
+/* Footer */
+.footer{
+  position:fixed; bottom:8px; left:12px;
+  color:var(--muted); font-size:12px; z-index:40;
+}
+
+/* Responsive */
+@media (min-width: 1441px) {
+  :root {
+    --carousel-radius: 500;
+    --slide-spacing: 100px;
+    --slide-width: 400px;
+    --slide-height: 460px;
+  }
+}
+
+@media (max-width: 1440px) {
+  :root {
+    --carousel-radius: 400;
+    --slide-spacing: 80px;
+    --slide-width: min(360px, 75vw);
+    --slide-height: min(420px, 65vh);
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --carousel-radius: 350;
+    --slide-spacing: 70px;
+    --slide-width: min(320px, 75vw);
+    --slide-height: min(380px, 65vh);
+  }
+  .controls-bottom {
+    bottom: 20px;
+    padding: 12px 18px;
+    gap: 8px;
+  }
+  .info-panel { display: none }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --carousel-radius: 300;
+    --slide-spacing: 60px;
+    --slide-width: min(300px, 80vw);
+    --slide-height: min(360px, 70vh);
+  }
+  .carousel-slide .slide-title { font-size: 14px; }
+  .carousel-slide .slide-desc { font-size: 12px; }
+  .controls-bottom { 
+    bottom: 20px;
+    gap: 6px;
+    padding: 8px 12px;
+    max-width: 92vw;
+  }
+  .controls-bottom button {
+    padding: 5px 8px;
+    font-size: 13px;
+  }
+  .controls-bottom select {
+    padding: 5px 6px;
+    font-size: 12px;
+  }
+  .dot-nav { bottom: 80px; }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --carousel-radius: 200;
+    --slide-spacing: 40px;
+    --slide-width: min(260px, 85vw);
+    --slide-height: min(320px, 75vh);
+  }
+  .carousel-wrap { 
+    padding: 0 10px;
+    margin-bottom: 140px;
+  }
+  .controls-bottom { 
+    bottom: 20px; 
+    gap: 4px; 
+    padding: 8px 10px;
+    max-width: 95vw;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .controls-bottom select { 
+    font-size: 11px;
+    padding: 4px 5px;
+  }
+  .controls-bottom button { 
+    padding: 4px 6px; 
+    font-size: 12px;
+  }
+  .dot-nav { 
+    bottom: 75px;
+    gap: 4px;
+  }
+  .dot { 
+    width: 6px; 
+    height: 6px; 
+  }
+  .carousel-slide .content-container {
+    padding: 10px;
+  }
+}
+
+/* Focus */
+button:focus, .dot:focus, .carousel-slide:focus{
+  outline:2px solid rgba(108,63,209,0.28);
+  outline-offset:3px;
+}
+  </style>
+</head>
+<body>
+  <!-- CANVASES: must be before content visually and z-index 0 (behind) -->
+  <canvas id="starfield" class="bg-canvas" aria-hidden="true"></canvas>
+  <canvas id="particles" class="bg-canvas" aria-hidden="true"></canvas>
+
+  <div class="app">
+    <div id="faux-cursor" class="faux-cursor" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <h1 class="brand">S A T H Y A</h1>
+    </header>
+
+    <main class="main">
+      <section class="carousel-wrap" id="carouselWrap">
+        <div id="carousel" class="carousel" role="list"></div>
+      </section>
+
+      <nav id="dotNav" class="dot-nav" aria-label="Slide navigation"></nav>
+      
+      <div class="controls-bottom" id="controlsBar" role="toolbar" aria-label="Gallery controls">
+        <button id="prevBtn" aria-label="Previous slide">◀</button>
+        <button id="nextBtn" aria-label="Next slide">▶</button>
+        <button id="autoplayBtn" aria-pressed="false" aria-label="Toggle autoplay">⏯</button>
+        <button id="shuffleBtn" aria-label="Shuffle slides">🔀</button>
+        <select id="speedSelect" aria-label="Autoplay speed">
+          <option value="normal">Normal </option>
+          <option value="fast">Fast</option>
+          <option value="slow">Slow</option>
+        </select>
+        <select id="aspectRatioSelect" aria-label="Image aspect ratio">
+          <option value="16:9">16:9</option>
+          <option value="1:1">1:1 (Square)</option>
+          <option value="9:16">9:16</option>
+          <option value="4:3">4:3</option>
+          <option value="3:2">3:2</option>
+          <option value="auto">Auto</option>
+        </select>
+      </div>
+
+      <aside class="info-panel" aria-hidden="false">
+        <h2>About</h2>
+        <p>Developed the Healthy Farm App in Kotlin with Firebase, connecting farmers directly to customers. Implemented user authentication, product management, and order handling for real-time buying and selling.</p>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <small>2025 Sathya. All rights reserved. Built with ❤️ and Modern AI Technologies.</small>
+    </footer>
+  </div>
+
+  <script>
+/* ===== SLIDE DATA ===== */
+
+const SLIDES = [
+  // Example of how to add your images. Replace these with your actual image files:
+  { 
+    title: "Welcome to Adventures!",          // The title that will appear under the image
+    key: "myPhoto1",              // A unique key for the image
+    img: "img 1.png",      // Your image filename
+    alt: "🌟 Stunning landing page showcasing breathtaking trekking destinations and adventure experiences!"  // Description for accessibility
+  },
+  { 
+    title: "Discover Our Story", 
+    key: "myPhoto2", 
+    img: "img 2.png", 
+    alt: "📖 About our mission - connecting adventure seekers with unforgettable trekking experiences and hidden gems!" 
+  },
+  { 
+    title: "Get In Touch", 
+    key: "myPhoto3", 
+    img: "img 3.png", 
+    alt: "💬 Easy contact form to reach out for personalized trek recommendations and bookings!" 
+  },
+  { 
+    title: "Explore Hidden Treasures", 
+    key: "myPhoto4", 
+    img: "img 4.png", 
+    alt: "🏔️ Spectacular gallery of adventure spots with scenic mountain trails and natural beauty!" 
+  },
+  { 
+    title: "Adventure Awaits", 
+    key: "myPhoto5", 
+    img: "img 5.png", 
+    alt: "🗺️ Immersive destination showcase with breathtaking landscapes and thrilling trekking routes!" 
+  },
+  { 
+    title: "Book Your Journey", 
+    key: "myPhoto6", 
+    img: "img 6.png", 
+    alt: "✈️ Interactive booking interface with flexible date selection and trek package options!" 
+  },
+  
+
+  // Add more images following the same format
+];
+
+// ✅ Step 1: Try to load image from localStorage if available
+SLIDES.forEach(slide => {
+  if (slide.key && localStorage.getItem(slide.key)) {
+    slide.img = localStorage.getItem(slide.key);
+  }
+});
+
+/* ===== Effects Manager (starfield + particles + cursor) ===== */
+const EffectsManager = {
+  initStarfield(canvas, layers = 3) {
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let stars = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      stars = [];
+      for (let l = 0; l < layers; l++) {
+        for (let i = 0; i < 60 + l * 30; i++) {
+          stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            z: l + 1,
+            r: Math.random() * (1.2 + l * 0.6),
+            alpha: 0.3 + Math.random() * 0.7,
+            vx: (Math.random() - 0.5) * (0.1 + l * 0.05),
+            vy: (Math.random() - 0.5) * (0.05 + l * 0.02)
+          });
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const s of stars) {
+        ctx.save();
+        ctx.globalAlpha = s.alpha;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = s.z === 1 ? "#ffffff" : s.z === 2 ? "#ffd700" : "#6c3fd1";
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = 8 * s.z;
+        ctx.fill();
+        ctx.restore();
+
+        s.x += s.vx;
+        s.y += s.vy;
+        if (s.x < 0) s.x = canvas.width;
+        if (s.x > canvas.width) s.x = 0;
+        if (s.y < 0) s.y = canvas.height;
+        if (s.y > canvas.height) s.y = 0;
+      }
+    }
+
+    function loop() {
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+    loop();
+  },
+
+  initParticles(canvas, count = 40) {
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      particles = [];
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: (Math.random() - 0.5) * 0.6,
+          r: 1 + Math.random() * 3,
+          color: `rgba(108,63,209,${0.3 + Math.random() * 0.6})`
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particles) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = "#ffd700";
+        ctx.shadowBlur = 4;
+        ctx.fill();
+        ctx.restore();
+
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      }
+    }
+
+    function loop() {
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+    loop();
+  },
+
+  initCursor(el) {
+    if (!el) return;
+    document.addEventListener("mousemove", (e) => {
+      el.style.left = e.clientX + "px";
+      el.style.top = e.clientY + "px";
+    });
+    document.addEventListener("mousedown", () => {
+      el.style.transform = "translate(-50%,-50%) scale(0.7)";
+      el.style.opacity = "0.5";
+    });
+    document.addEventListener("mouseup", () => {
+      el.style.transform = "translate(-50%,-50%) scale(1)";
+      el.style.opacity = "0.9";
+    });
+  }
+};
+
+/* ===== AudioManager (light) ===== */
+const AudioManager = {
+  init() {
+    try {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this.master = this.ctx.createGain();
+      this.master.gain.value = 0.6;
+      this.master.connect(this.ctx.destination);
+
+      // gentle ambient
+      const o1 = this.ctx.createOscillator();
+      const o2 = this.ctx.createOscillator();
+      const f = this.ctx.createBiquadFilter();
+      const g = this.ctx.createGain();
+
+      o1.type = "sine"; o2.type = "sine";
+      o1.frequency.value = 40; o2.frequency.value = 60;
+      f.type = "lowpass"; f.frequency.value = 400;
+      g.gain.value = 0.02;
+
+      o1.connect(f); o2.connect(f);
+      f.connect(g);
+      g.connect(this.master);
+      o1.start(); o2.start();
+
+      this.masterGain = g;
+    } catch (err) {
+      console.warn("Audio not available:", err);
+    }
+  },
+
+  playNav() {
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    const o = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(450, now);
+    o.frequency.exponentialRampToValueAtTime(900, now + 0.08);
+    g.gain.setValueAtTime(0.06, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
+    o.connect(g);
+    g.connect(this.master);
+    o.start(now);
+    o.stop(now + 0.15);
+  }
+};
+
+/* ===== Stellar Navigator (carousel) ===== */
+class StellarNavigator {
+  constructor(opts) {
+    this.slides = opts.slides || [];
+    this.carouselEl = opts.carouselEl;
+    this.dotNavEl = opts.dotNavEl;
+    this.prevBtn = opts.prevBtn;
+    this.nextBtn = opts.nextBtn;
+    this.autoplayBtn = opts.autoplayBtn;
+    this.shuffleBtn = opts.shuffleBtn;
+    this.speedSelect = opts.speedSelect;
+
+    this.slideCount = this.slides.length;
+    this.activeIdx = 0;
+    this.autoplay = false;
+    this.speed = "normal";
+    this.timer = null;
+
+    this.init();
+  }
+
+  init() {
+    this.renderSlides();
+    this.renderDots();
+    this.attachEvents();
+    this.update();
+  }
+
+  renderSlides() {
+    this.carouselEl.innerHTML = "";
+    this.slideEls = [];
+    for (let i = 0; i < this.slideCount; i++) {
+      const s = document.createElement("div");
+      s.className = "carousel-slide";
+      s.setAttribute("tabindex", "0");
+      s.setAttribute("role", "group");
+      s.setAttribute("aria-label", this.slides[i].title);
+      
+      // Create image container
+      const imageContainer = document.createElement("div");
+      imageContainer.className = "image-container";
+      
+      const img = new Image();
+      img.src = this.slides[i].img;
+      img.alt = this.slides[i].alt || this.slides[i].title;
+      
+      // Handle image load to set orientation class
+      img.onload = () => {
+        if (img.naturalWidth > img.naturalHeight) {
+          s.classList.add('landscape');
+        } else {
+          s.classList.add('portrait');
+        }
+      };
+
+      imageContainer.appendChild(img);
+      s.appendChild(imageContainer);
+
+      // Create content container for title and description
+      const contentContainer = document.createElement("div");
+      contentContainer.className = "content-container";
+      
+      const titleDiv = document.createElement("div");
+      titleDiv.className = "slide-title";
+      titleDiv.textContent = this.slides[i].title;
+      
+      const descDiv = document.createElement("div");
+      descDiv.className = "slide-desc";
+      descDiv.textContent = this.slides[i].alt || "";
+      
+      contentContainer.appendChild(titleDiv);
+      contentContainer.appendChild(descDiv);
+      s.appendChild(contentContainer);
+      
+      this.carouselEl.appendChild(s);
+      this.slideEls.push(s);
+    }
+  }
+
+  renderDots() {
+    this.dotNavEl.innerHTML = "";
+    this.dotEls = [];
+    for (let i = 0; i < this.slideCount; i++) {
+      const b = document.createElement("button");
+      b.className = "dot";
+      b.setAttribute("aria-label", `Go to slide ${i + 1}`);
+      b.addEventListener("click", () => this.goTo(i));
+      this.dotNavEl.appendChild(b);
+      this.dotEls.push(b);
+    }
+  }
+
+  attachEvents() {
+    if (this.prevBtn) this.prevBtn.addEventListener("click", () => this.prev());
+    if (this.nextBtn) this.nextBtn.addEventListener("click", () => this.next());
+    if (this.autoplayBtn) this.autoplayBtn.addEventListener("click", () => this.toggleAutoplay());
+    if (this.shuffleBtn) this.shuffleBtn.addEventListener("click", () => this.shuffleSlides());
+    if (this.speedSelect) this.speedSelect.addEventListener("change", (e) => this.setSpeed(e.target.value));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") this.prev();
+      if (e.key === "ArrowRight") this.next();
+      if (e.key === "Home") this.goTo(0);
+      if (e.key === "End") this.goTo(this.slideCount - 1);
+      if (e.key === " ") { e.preventDefault(); this.toggleAutoplay(); }
+    });
+
+    this.carouselEl.addEventListener("wheel", (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        if (e.deltaY > 0) this.next(); else this.prev();
+      }
+    }, { passive: true });
+
+    // simple touch support
+    this.carouselEl.addEventListener("touchstart", (e) => {
+      this.touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    this.carouselEl.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - (this.touchStartX || 0);
+      if (Math.abs(dx) > 40) {
+        if (dx > 0) this.prev(); else this.next();
+      }
+    }, { passive: true });
+
+    window.addEventListener("resize", () => this.update());
+
+    // Long-press drag navigation for controls bar
+    const controlsBar = document.getElementById("controlsBar");
+    let dragMode = false;
+    let dragStartX = null;
+    let dragTimeout = null;
+    if (controlsBar) {
+      // Mouse events
+      controlsBar.addEventListener("mousedown", (e) => {
+        dragTimeout = setTimeout(() => {
+          dragMode = true;
+          dragStartX = e.clientX;
+        }, 500); // long press: 500ms
+      });
+      controlsBar.addEventListener("mouseup", (e) => {
+        clearTimeout(dragTimeout);
+        if (dragMode && dragStartX !== null) {
+          const dx = e.clientX - dragStartX;
+          if (Math.abs(dx) > 40) {
+            if (dx > 0) this.prev(); else this.next();
+          }
+        }
+        dragMode = false;
+        dragStartX = null;
+      });
+      controlsBar.addEventListener("mouseleave", () => {
+        clearTimeout(dragTimeout);
+        dragMode = false;
+        dragStartX = null;
+      });
+      // Touch events
+      controlsBar.addEventListener("touchstart", (e) => {
+        dragTimeout = setTimeout(() => {
+          dragMode = true;
+          dragStartX = e.touches[0].clientX;
+        }, 500);
+      }, { passive: true });
+      controlsBar.addEventListener("touchend", (e) => {
+        clearTimeout(dragTimeout);
+        if (dragMode && dragStartX !== null) {
+          const dx = e.changedTouches[0].clientX - dragStartX;
+          if (Math.abs(dx) > 40) {
+            if (dx > 0) this.prev(); else this.next();
+          }
+        }
+        dragMode = false;
+        dragStartX = null;
+      });
+      controlsBar.addEventListener("touchcancel", () => {
+        clearTimeout(dragTimeout);
+        dragMode = false;
+        dragStartX = null;
+      });
+    }
+  }
+
+  update() {
+    const radius = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--carousel-radius")) || 360;
+    const step = 360 / this.slideCount;
+    for (let i = 0; i < this.slideCount; i++) {
+      const offsetIndex = i - this.activeIdx;
+      const angle = (offsetIndex * step) * (Math.PI / 180);
+      const x = Math.sin(angle) * radius;
+      const z = Math.cos(angle) * radius;
+      const rotY = offsetIndex * step;
+      const scale = i === this.activeIdx ? 1 : 0.8;
+      const opacity = i === this.activeIdx ? 1 : 0.6;
+      
+      this.slideEls[i].style.transform = `translate(-50%,-50%) translate3d(${x}px, 0px, ${z}px) rotateY(${rotY}deg) scale(${scale})`;
+      this.slideEls[i].style.opacity = opacity;
+      this.slideEls[i].classList.toggle("active", i === this.activeIdx);
+      this.slideEls[i].setAttribute("aria-hidden", i !== this.activeIdx);
+    }
+    this.dotEls.forEach((d, idx) => d.classList.toggle("active", idx === this.activeIdx));
+  }
+
+  goTo(idx) {
+    if (idx < 0 || idx >= this.slideCount) return;
+    this.activeIdx = idx;
+    this.update();
+    AudioManager.playNav();
+  }
+
+  next() { this.goTo((this.activeIdx + 1) % this.slideCount); }
+  prev() { this.goTo((this.activeIdx - 1 + this.slideCount) % this.slideCount); }
+
+  toggleAutoplay() {
+    this.autoplay = !this.autoplay;
+    if (this.autoplay) {
+      this.autoplayBtn?.setAttribute("aria-pressed", "true");
+      this.timer = setInterval(() => this.next(), this.getSpeedMs());
+    } else {
+      this.autoplayBtn?.setAttribute("aria-pressed", "false");
+      clearInterval(this.timer);
+    }
+  }
+
+  getSpeedMs() {
+    if (this.speed === "fast") return 1200;
+    if (this.speed === "slow") return 3200;
+    return 2000;
+  }
+
+  setSpeed(speed) {
+    this.speed = speed;
+    if (this.autoplay) {
+      clearInterval(this.timer);
+      this.timer = setInterval(() => this.next(), this.getSpeedMs());
+    }
+  }
+
+  shuffleSlides() {
+    for (let i = this.slides.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.slides[i], this.slides[j]] = [this.slides[j], this.slides[i]];
+    }
+    this.renderSlides();
+    this.renderDots();
+    this.update();
+  }
+}
+
+/* ===== Boot up ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  // DOM references (use getElementById to avoid undefined variables)
+  const carousel = document.getElementById("carousel");
+  const dotNav = document.getElementById("dotNav");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const autoplayBtn = document.getElementById("autoplayBtn");
+  const shuffleBtn = document.getElementById("shuffleBtn");
+  const speedSelect = document.getElementById("speedSelect");
+  const starCanvas = document.getElementById("starfield");
+  const particleCanvas = document.getElementById("particles");
+  const cursorEl = document.getElementById("faux-cursor");
+  const controlsBar = document.getElementById("controlsBar");
+  const carouselWrap = document.getElementById("carouselWrap");
+
+  // Start effects & audio
+  EffectsManager.initStarfield(starCanvas, 3);
+  EffectsManager.initParticles(particleCanvas, 40);
+  EffectsManager.initCursor(cursorEl);
+  AudioManager.init();
+
+  // Create navigator
+  const nav = new StellarNavigator({
+    slides: SLIDES,
+    carouselEl: carousel,
+    dotNavEl: dotNav,
+    prevBtn,
+    nextBtn,
+    autoplayBtn,
+    shuffleBtn,
+    speedSelect
+  });
+
+  // ensure speed select default
+  speedSelect.value = "normal";
+  speedSelect.addEventListener("change", (e) => nav.setSpeed(e.target.value));
+
+  // Aspect ratio selector
+  const aspectRatioSelect = document.getElementById("aspectRatioSelect");
+  if (aspectRatioSelect) {
+    aspectRatioSelect.addEventListener("change", (e) => {
+      const ratio = e.target.value;
+      const root = document.documentElement;
+      
+      // Set the aspect ratio CSS variable
+      if (ratio === "auto") {
+        root.style.setProperty("--image-aspect-ratio", "auto");
+      } else {
+        root.style.setProperty("--image-aspect-ratio", ratio);
+      }
+
+      // Adjust carousel slide height based on aspect ratio
+      let heightAdjustment = "min(420px, 65vh)";
+      
+      if (ratio === "16:9") {
+        heightAdjustment = "min(420px, 65vh)";
+      } else if (ratio === "1:1") {
+        // For square images, increase height
+        heightAdjustment = "min(450px, 70vh)";
+      } else if (ratio === "9:16") {
+        // For portrait, significantly increase height
+        heightAdjustment = "min(550px, 80vh)";
+      } else if (ratio === "4:3") {
+        heightAdjustment = "min(430px, 66vh)";
+      } else if (ratio === "3:2") {
+        heightAdjustment = "min(410px, 64vh)";
+      } else if (ratio === "auto") {
+        heightAdjustment = "min(420px, 65vh)";
+      }
+      
+      root.style.setProperty("--slide-height", heightAdjustment);
+      
+      // Trigger update to recalculate carousel
+      nav.update();
+    });
+  }
+  // focus carousel wrapper on click for keyboard
+  carouselWrap?.addEventListener("click", () => carouselWrap.focus());
+
+  // expose for debugging
+  window.__stellar = nav;
+
+  // === Draggable Controls Bar ===
+  function makeControlsDraggable(el) {
+    if (!el) return;
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    // Don't make it draggable - keep it fixed at bottom center
+    el.style.position = "fixed";
+    el.style.cursor = "default";
+    el.style.zIndex = "100";
+    el.style.left = "50%";
+    el.style.transform = "translateX(-50%)";
+    el.style.bottom = "20px";
+
+    // Prevent dragging - user can interact with buttons but bar won't move
+    el.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+    });
+
+    el.addEventListener("touchstart", (e) => {
+      e.stopPropagation();
+    }, { passive: true });
+  }
+
+  // Initialize controls (no dragging)
+  makeControlsDraggable(controlsBar);
+});
+  </script>
+</body>
+</html>

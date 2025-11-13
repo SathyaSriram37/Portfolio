@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SATHYEAH | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom Font Jaturat -->
+    <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <script>
+        // Theme functionality - must run before page loads
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+        }
+    </script>
+    <style>
+        @font-face {
+      font-family: "Jaturat";
+      src: url("https://db.onlinewebfonts.com/t/cf3fb387331afda8f5d7f9c8dea3cd13.eot");
+      src: url("https://db.onlinewebfonts.com/t/cf3fb387331afda8f5d7f9c8dea3cd13.eot?#iefix") format("embedded-opentype"),
+           url("https://db.onlinewebfonts.com/t/cf3fb387331afda8f5d7f9c8dea3cd13.woff2") format("woff2"),
+           url("https://db.onlinewebfonts.com/t/cf3fb387331afda8f5d7f9c8dea3cd13.woff") format("woff"),
+           url("https://db.onlinewebfonts.com/t/cf3fb387331afda8f5d7f9c8dea3cd13.ttf") format("truetype"),
+           url("https://db.onlinewebfonts.com/t/cf3fb387331afda8f5d7f9c8dea3cd13.svg#Jaturat") format("svg");
+    }
+
+    * {
+      font-family: "Jaturat", "Inter", sans-serif;
+    }
+        body {
+            box-sizing: border-box;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animation classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Project card hover effects */
+        .project-card {
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Project card title hover effect */
+        .dark .project-card:hover h3 {
+            color: #fafb63 !important;
+        }
+         .light .project-card:hover h3 {
+            color: #8B3DFF !important;
+        }
+
+        /* Project card demo/view code link colors */
+        .project-card .project-link {
+            color: #6bfff7 !important;
+            transition: all 0.3s ease;
+        }
+       
+        .light .project-card .project-link {
+            color:  black !important;
+            transition: all 0.3s ease;
+        }
+
+        .project-card .project-link:hover {
+            color:#8B3DFF !important;
+        }
+        .dark .project-card .project-link:hover {
+            color:#fafb63 !important;
+        }
+
+        /* Theme toggle button animation */
+        #theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Floating animation for hero section */
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Pulse animation for buttons */
+        .pulse-on-hover:hover {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Typing animation */
+        .typing-animation {
+            overflow: hidden;
+            border-right: 3px solid #60a5fa;
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #60a5fa; }
+        }
+
+        /* Skill card animations */
+        .skill-card {
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Social button hover effects */
+        .social-btn {
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Form input focus effects */
+        .form-input:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        /* Form validation styles */
+        .form-input.error {
+            border-color: #ef4444 !important;
+            background-color: #fef2f2;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .dark .form-input.error {
+            border-color: #ef4444 !important;
+            background-color: #450a0a;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .error-message::before {
+            content: "⚠️";
+            margin-right: 0.5rem;
+        }
+
+        /* Portfolio title hover effect */
+        .portfolio-title {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-title:hover {
+            color: #60a5fa;
+            transform: scale(1.05);
+        }
+
+        /* Navigation link styles */
+        .nav-link {
+            text-decoration: none !important;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            text-decoration: none !important;
+        }
+
+        .no-underline {
+            text-decoration: none !important;
+        }
+
+        /* Animated underline for navigation */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #fafb63, #6bfff7);
+            border-radius: 2px;
+            transition: width 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            opacity: 0.7;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+            opacity: 1;
+            animation: pulse-underline 2s ease-in-out infinite;
+        }
+
+        /* Light theme underline */
+        .light .nav-link::after {
+            background: linear-gradient(135deg, #a78bfa, #38a9f2);
+        }
+
+        /* Pulse animation for active underline */
+        @keyframes pulse-underline {
+            0%, 100% { 
+                opacity: 1;
+                transform: scaleY(1);
+            }
+            50% { 
+                opacity: 0.8;
+                transform: scaleY(1.2);
+            }
+        }
+
+        /* Mobile menu animation */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* About section - clean and static */
+        .about-section {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Home section background stays behind */
+        .home-section {
+            position: relative;
+            z-index: 0;
+            overflow: hidden;
+            background: #000000 !important;
+        }
+
+        /* Light theme home section */
+        .light .home-section {
+            background: #ffffff !important;
+        }
+
+        /* Cube particles animation */
+        .cube-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            clip-path: inset(0 0 0 0);
+        }
+
+        .cube {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(45deg, #6bfff7, #fafb63);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(107, 255, 247, 0.5), 0 0 20px rgba(250, 251, 99, 0.3);
+            animation: floatUp linear infinite;
+            opacity: 0.8;
+        }
+
+        .cube::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #6bfff7, #fafb63);
+            border-radius: 3px;
+            z-index: -1;
+            filter: blur(4px);
+            opacity: 0.6;
+        }
+
+        /* Light theme cube colors */
+        .light .cube {
+            background: linear-gradient(90deg, #00C4CC 0%, #8B3DFF 100%);
+            box-shadow: 0 0 10px rgba(167, 139, 250, 0.5), 0 0 20px rgba(56, 169, 242, 0.3);
+        }
+
+        .light .cube::before {
+            background: linear-gradient(90deg, #00C4CC 0%, #8B3DFF 100%);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(calc(100vh + 100px)) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-200px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Hero content styling for dark background */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-card {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(107, 255, 247, 0.1);
+        }
+
+        .hero-card:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(107, 255, 247, 0.2);
+        }
+
+        /* Light theme hero card */
+        .light .hero-card {
+            background: rgba(0, 0, 0, 0.1) !important;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            box-shadow: 0 25px 50px rgba(255, 255, 255, 0.3), 0 0 30px rgba(167, 139, 250, 0.1);
+        }
+
+        .light .hero-card:hover {
+            background: rgba(0, 0, 0, 0.15) !important;
+            box-shadow: 0 30px 60px rgba(255, 255, 255, 0.4), 0 0 40px rgba(167, 139, 250, 0.2);
+        }
+
+        .hero-title {
+            color: #ffffff !important;
+            text-shadow: 0 0 20px rgba(107, 255, 247, 0.3);
+        }
+
+        .hero-subtitle {
+            color: #6bfff7 !important;
+            text-shadow: 0 0 15px rgba(107, 255, 247, 0.5);
+        }
+
+        .hero-quote {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .hero-btn-primary {
+            background: linear-gradient(135deg, #6bfff7, #4fd1c7) !important;
+            color: #000000 !important;
+            border: none;
+            box-shadow: 0 10px 25px rgba(107, 255, 247, 0.3);
+        }
+
+        .hero-btn-primary:hover {
+            background: linear-gradient(135deg, #4fd1c7, #6bfff7) !important;
+            box-shadow: 0 15px 35px rgba(107, 255, 247, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .hero-btn-secondary {
+            background: linear-gradient(135deg, #fafb63, #f0f14a) !important;
+            color: #000000 !important;
+            border: none;
+            box-shadow: 0 10px 25px rgba(250, 251, 99, 0.3);
+        }
+
+        .hero-btn-secondary:hover {
+            background: linear-gradient(135deg, #f0f14a, #fafb63) !important;
+            box-shadow: 0 15px 35px rgba(250, 251, 99, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .hero-avatar {
+            background: linear-gradient(135deg, #6bfff7, #fafb63) !important;
+            box-shadow: 0 0 30px rgba(107, 255, 247, 0.4), 0 0 50px rgba(250, 251, 99, 0.2);
+        }
+
+        /* Light theme hero text and buttons */
+        .light .hero-title {
+            color: #000000 !important;
+            text-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+        }
+
+        .light .hero-subtitle {
+            color: #a78bfa !important;
+            text-shadow: 0 0 15px rgba(167, 139, 250, 0.5);
+        }
+
+        .light .hero-quote {
+            color: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        .light .hero-btn-primary {
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6) !important;
+            color: #ffffff !important;
+            box-shadow: 0 10px 25px rgba(167, 139, 250, 0.3);
+        }
+
+        .light .hero-btn-primary:hover {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa) !important;
+            box-shadow: 0 15px 35px rgba(167, 139, 250, 0.4);
+        }
+
+        .light .hero-btn-secondary {
+            background: linear-gradient(135deg, #38a9f2, #2563eb) !important;
+            color: #ffffff !important;
+            box-shadow: 0 10px 25px rgba(56, 169, 242, 0.3);
+        }
+
+        .light .hero-btn-secondary:hover {
+            background: linear-gradient(135deg, #2563eb, #38a9f2) !important;
+            box-shadow: 0 15px 35px rgba(56, 169, 242, 0.4);
+        }
+
+        .light .hero-avatar {
+            background: linear-gradient(135deg, #a78bfa, #38a9f2) !important;
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.4), 0 0 50px rgba(56, 169, 242, 0.2);
+        }
+
+
+    </style>
+</head>
+<body class="bg-white dark:bg-black transition-colors duration-300">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 transition-colors duration-300 bg-white/90 dark:bg-black/90 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <i><h1 class="portfolio-title text-2xl font-bold text-[#8B3DFF] dark:text-[#6bfff7]" onclick="scrollToHome()">S A T H Y A</h1></i>
+
+                </div>
+                
+                <!-- Desktop Navigation and Theme Toggle -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-gray-900 dark:text-white hover:text-blue-400 px-3 py-2 text-sm font-medium active no-underline">Home</a>
+                    <a href="#about" class="nav-link text-gray-900 dark:text-white hover:text-blue-400 px-3 py-2 text-sm font-medium no-underline">About</a>
+                    <a href="#projects" class="nav-link text-gray-900 dark:text-white hover:text-blue-400 px-3 py-2 text-sm font-medium no-underline">Works</a>
+                    <a href="#contact" class="nav-link text-gray-900 dark:text-white hover:text-blue-400 px-3 py-2 text-sm font-medium no-underline">Contact</a>
+                    <button id="theme-toggle" class="text-gray-900 dark:text-white hover:text-blue-400 focus:outline-none p-2 rounded-lg transition duration-300">
+                        <svg id="sun-icon" class="h-5 w-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+                        </svg>
+                        <svg id="moon-icon" class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                        </svg>
+                    </button>
+                </div>
+                    
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-900 dark:text-white hover:text-blue-400 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="mobile-menu md:hidden fixed top-16 right-0 w-64 h-screen bg-white dark:bg-black shadow-lg transition-all duration-300 z-40 transform translate-x-full">
+            <div class="px-2 pt-4 pb-3 space-y-1">
+                <a href="#home" class="mobile-nav-link block px-3 py-3 text-base font-medium text-gray-900 dark:text-white hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200">Home</a>
+                <a href="#about" class="mobile-nav-link block px-3 py-3 text-base font-medium text-gray-900 dark:text-white hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200">About</a>
+                <a href="#projects" class="mobile-nav-link block px-3 py-3 text-base font-medium text-gray-900 dark:text-white hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200">Projects</a>
+                <a href="#contact" class="mobile-nav-link block px-3 py-3 text-base font-medium text-gray-900 dark:text-white hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200">Contact</a>
+                <div class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+                    <button id="mobile-theme-toggle" class="w-full flex items-center px-3 py-3 text-base font-medium text-gray-900 dark:text-white hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200">
+                        <svg id="mobile-sun-icon" class="h-5 w-5 mr-3 hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+                        </svg>
+                        <svg id="mobile-moon-icon" class="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                        </svg>
+                        <span id="mobile-theme-text">Switch to Light Mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Backdrop -->
+        <div id="mobile-backdrop" class="mobile-backdrop md:hidden fixed inset-0 bg-black bg-opacity-50 z-30 hidden transition-opacity duration-300"></div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="home-section min-h-screen py-20 flex items-center justify-center text-gray-900 dark:text-white transition-colors duration-300">
+        <!-- Cube Particles Background -->
+        <div class="cube-particles" id="cubeParticles"></div>
+        
+        <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="fade-in floating">
+                <!-- Profile Card - Square Layout -->
+                <div class="mb-12">
+                    <div class="hero-card rounded-2xl p-10 shadow-2xl w-[450px] h-[450px] mx-auto transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center text-center">
+                        <!-- Avatar at top -->
+                        <div class="hero-avatar w-32 h-32 rounded-full flex items-center justify-center mb-6 overflow-hidden">
+                            <img src="profile.png" alt="Profile Picture" class="w-full h-full object-cover rounded-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <span class="text-2xl font-bold text-black hidden">SP</span>
+                        </div>
+                        
+                        <!-- Name -->
+                        <h2 class="hero-title text-xl font-bold text-[#8B3DFF] dark:text-[#6bfff7]">SATHYA SRIRAM R K</h2>
+                        
+                        <!-- Role -->
+                        <p class="hero-subtitle font-medium mb-4 text-sm">Code Enthusiast | Typist</p>
+                        
+                        <!-- Quotes -->
+                        <div class="mb-6">
+                            <p class="hero-quote italic text-black-sm mb-1">"Code is poetry written in logic."</p>
+                            <p class="hero-quote italic text-black-sm">"Design is not just what it looks like - it's how it works."</p>
+                        </div>
+                        
+                        <!-- Buttons -->
+                        <div class="flex gap-2 w-full">
+                            <button onclick="scrollToSection('projects')" class="hero-btn-primary flex-1 px-3 py-2 rounded-lg font-medium transition duration-300 text-sm">View My Work</button>
+                            <button onclick="scrollToSection('contact')" class="hero-btn-secondary flex-1 px-3 py-2 rounded-lg font-medium transition duration-300 text-sm">Get In Touch</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section py-20 bg-gray-50 dark:bg-black transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl italic font-bold mb-4 fade-in font-bold text-[#8B3DFF] dark:text-[#6bfff7]">About Me</h2>
+                <p class="text-lg text-black dark:text-[#fafb63] max-w-2xl mx-auto fade-in">I'm Sathya Sriram, Passionate about creating digital solutions that combine creativity with functionality</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="slide-in-left">
+                 <div class="rounded-2xl p-8 text-black bg-gradient-to-r from-[#00C4CC] to-[#8B3DFF] dark:from-[#FAFB63] dark:to-[#6BFFF7]">
+                        <h3 class="text-2xl font-bold italic mb-4">MY JOURNEY</h3>
+                        <p class="text-lg leading-relaxed">
+                            With over My Studies, I specialize in creating modern, responsive websites and applications. I'm passionate about clean code, user experience, and bringing ideas to life through technology.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="slide-in-right">
+                    <h3 class="text-2xl font-bold mb-6 italic font-bold text-[#8B3DFF] dark:text-[#6bfff7]">Skills & Technologies</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="skill-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-[#008ae6] dark:text-[#FAFB63] mb-2">Frontend</h4>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">JavaScript, HTML5, CSS3, Tailwind CSS</p>
+                        </div>
+                        <div class="skill-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-[#008ae6] dark:text-[#FAFB63] mb-2">Backend</h4>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">java, Python, PHP, MySQL, MongoDB</p>
+                        </div>
+                        <div class="skill-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-[#008ae6] dark:text-[#FAFB63] mb-2">Design</h4>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">Figma, Canva, UI/UX Design</p>
+                        </div>
+                        <div class="skill-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-lg shadow-sm">
+                            <h4 class="font-semibold text-[#008ae6] dark:text-[#FAFB63] mb-2">Tools</h4>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm">Git & Github(Version control), VS Code</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-white dark:bg-black transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 fade-in italic font-bold text-[#8B3DFF] dark:text-[#6bfff7]">Featured Works</h2>
+                <p class="text-lg text-black-sm dark:text-[#fafb63] max-w-2xl mx-auto fade-in">A showcase of my recent work and creative solutions</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+                <div class="project-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden fade-in flex flex-col">
+    <div class="w-full bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center overflow-hidden" style="aspect-ratio: 16/9;">
+        <img src="Adventure spot logo.png" alt="Travel Booking Platform" class="w-full h-full object-cover">
+    </div>
+    <div class="p-6 flex flex-col flex-1">
+        <h3 class="text-xl font-bold italic text-gray-900 dark:text-white mb-2">Travel Booking Platform</h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 flex-1">Developed a fully functional travel website using HTML, CSS, JavaScript, PHP, and MySQL. The site allows user registration, booking trekking spots, viewing trip history, and submitting feedback. Designed and tested locally using XAMPP and Visual Studio Code.</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">HTML</span>
+            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">CSS</span>
+            <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">JavaScript</span>
+            <span class="px-3 py-1 bg-red-100 text-red-800 text-xs rounded-full">PHP</span>
+            <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">MySQL</span>
+        </div>
+        <!-- Buttons at the bottom left -->
+        <div class="mt-auto flex space-x-4">
+            <a href="demo.html">
+                <button class="project-link font-bold">Demo</button>
+            </a>
+            <button class="project-link font-bold">View Code</button>
+        </div>
+    </div>
+</div>
+
+                
+                <!-- Project 2 -->
+                <div class="project-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden fade-in flex flex-col">
+    <div class="w-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center overflow-hidden" style="aspect-ratio: 16/9;">
+        <img src="HEALTHY FARM.png" alt="E-commerce App" class="w-full h-full object-cover">
+    </div>
+    <div class="p-6 flex flex-col flex-1">
+        <h3 class="text-xl font-bold italic text-gray-900 dark:text-white mb-2">E-commerce App</h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 flex-1">Developed the Healthy Farm App in Kotlin with Firebase, connecting farmers directly to customers. Implemented user authentication, product management, and order handling for real-time buying and selling.</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Kotlin</span>
+            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">Firebase</span>
+            <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">XML</span>
+        </div>
+        <!-- Buttons at the bottom left -->
+        <div class="mt-auto flex space-x-4">
+            <a href="demo1.html">
+                <button class="project-link font-bold">Demo</button>
+            </a>
+            <button class="project-link font-bold">View Code</button>
+        </div>
+    </div>
+</div>
+
+                
+                <!-- Project 3 -->
+                <div class="project-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden fade-in flex flex-col">
+    <div class="w-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center overflow-hidden" style="aspect-ratio: 16/9;">
+        <img src="Portfolio.png" alt="Portfolio Website" class="w-full h-full object-cover">
+    </div>
+    <div class="p-6 flex flex-col flex-1">
+        <h3 class="text-xl font-bold italic text-gray-900 dark:text-white mb-2">Portfolio Website</h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 flex-1">A responsive portfolio website showcasing creative work with smooth animations, optimized performance, and modern design principles.</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">HTML</span>
+            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">Tailwind-CSS</span>
+            <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">JavaScript</span>
+            <span class="px-3 py-1 bg-red-100 text-red-800 text-xs rounded-full">Chatgpt-5</span>
+            <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">canva</span>
+        </div>
+        
+        <!-- Buttons at the bottom left -->
+        <div class="mt-auto flex space-x-4">
+            
+                <button onclick="scrollToSection('home')" class="project-link font-bold">Demo</button>
+            <button class="project-link font-bold">View Code</button>
+        </div>
+    </div>
+</div>
+          <!-- Project 4 -->
+                <div class="project-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden fade-in flex flex-col">
+    <div class="w-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center overflow-hidden" style="aspect-ratio: 16/9;">
+        <img src="Salesforce.jpg" alt="Internship" class="w-full h-full object-cover">
+    </div>
+    <div class="p-6 flex flex-col flex-1">
+    <h3 class="text-xl font-bold italic text-gray-900 dark:text-white mb-2">Internship</h3>
+    <p class="text-gray-600 dark:text-gray-300 mb-4 flex-1">Currently working as a Salesforce Intern, gaining hands-on experience in CRM, automation, and customization. Through...</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Admin</span>
+            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full">Developer</span>
+        </div>
+        
+        <!-- Buttons at the bottom left -->
+        <div class="mt-auto flex space-x-4">
+            <button class="project-link font-bold">Loading...</button>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-50 dark:bg-black transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl italic font-bold mb-4 fade-in font-bold text-[#8B3DFF] dark:text-[#6bfff7]">Get In Touch</h2>
+                <p class="text-lg text-black dark:text-[#fafb63] max-w-2xl mx-auto fade-in">Ready to start your next project? Let's create something amazing together!</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="slide-in-left">
+                    <h3 class="text-2xl font-bold italic text-[#8B3DFF] dark:text-[#6bfff7] mb-6">Let's Connect</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 dark:text-white">Email</h4>
+                                <p class="text-gray-600 dark:text-gray-300">sathyasakthisk37@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 dark:text-white">Location</h4>
+                                <p class="text-gray-600 dark:text-gray-300">Rajapalayam</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h4 class="text-xl font-bold italic text-[#8B3DFF] dark:text-[#6bfff7] mb-4">Follow Me</h4>
+                        <div class="flex space-x-4">
+                           <a href="https://x.com/Sathya_37?t=EmTA2IjOVOpnjdaaRw_UhA&s=09" target="_blank" rel="noopener noreferrer">
+  <button class="social-btn bg-black text-white p-3 rounded-full hover:bg-gray-800 transition duration-300">
+    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    </svg>
+  </button>
+</a>
+                            <a href="https://www.linkedin.com/in/sathya-sriram-6a6857334?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener noreferrer">
+                            <button class="social-btn bg-blue-700 text-white p-3 rounded-full hover:bg-blue-800 transition duration-300">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                </svg>
+                            </button>
+                        </a>
+                            <a href="https://www.instagram.com/_dum?igsh=cWU2dGU4eGxiZHp1" target="_blank" rel="noopener noreferrer">
+  <button class="social-btn bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 rounded-full hover:from-purple-600 hover:to-pink-600 transition duration-300">
+    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+    </svg>
+  </button>
+</a>
+                            <a href="https://github.com/SathyaSriram37/" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" title="GitHub">
+    <button class="social-btn bg-gray-900 text-white p-3 rounded-full hover:bg-gray-800 transition duration-300">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+        <span class="sr-only">GitHub</span>
+    </button>
+</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slide-in-right">
+                    <form class="space-y-6" onsubmit="handleSubmit(event)">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Your Name</label>
+                            <input type="text" id="name" name="name" required class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Your Email</label>
+                            <input type="email" id="email" name="email" required class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                        </div>
+                        
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Subject</label>
+                            <input type="text" id="subject" name="subject" required class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Message</label>
+                            <textarea id="message" name="message" rows="5" required class="form-input w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 resize-none"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full text-black py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition duration-300 transform hover:scale-105 bg-gradient-to-r from-[#00C4CC] to-[#8B3DFF] dark:from-[#FAFB63] dark:to-[#6BFFF7]">
+                            Send Message
+                        </button>
+                        
+                        <div id="form-message" class="hidden p-4 rounded-lg text-center font-medium"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white py-8 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2025 Sathya. All rights reserved. Built with ❤️ and Modern AI Technologies.</p>
+        </div>
+    </footer>
+
+    <script>
+         // Initialize EmailJS with your public key
+        (function() {
+            emailjs.init("A21NshzyQFp2vIFbH"); // Replace with your actual EmailJS public key
+        })();
+
+        // Cube particles functionality
+        function createCubeParticles() {
+            const container = document.getElementById('cubeParticles');
+            const containerWidth = container.offsetWidth;
+            const containerHeight = container.offsetHeight;
+            
+            // Calculate number of cubes based on 1cm spacing (approximately 37.8px)
+            const spacing = 38; // 1cm ≈ 37.8px
+            const cubesPerRow = Math.floor(containerWidth / spacing);
+            const totalCubes = cubesPerRow * 3; // Create 3 rows worth of cubes
+            
+            for (let i = 0; i < totalCubes; i++) {
+                const cube = document.createElement('div');
+                cube.className = 'cube';
+                
+                // Random horizontal position
+                cube.style.left = Math.random() * containerWidth + 'px';
+                
+                // Random animation duration between 8-15 seconds
+                const duration = Math.random() * 7 + 8;
+                cube.style.animationDuration = duration + 's';
+                
+                // Random delay to stagger the animation
+                const delay = Math.random() * 5;
+                cube.style.animationDelay = delay + 's';
+                
+                // Random rotation speed
+                const rotationSpeed = Math.random() * 2 + 1;
+                cube.style.setProperty('--rotation-speed', rotationSpeed);
+                
+                container.appendChild(cube);
+            }
+        }
+
+        // Initialize cube particles when page loads
+        function initCubeParticles() {
+            createCubeParticles();
+            
+            // Recreate particles every 20 seconds to maintain continuous effect
+            setInterval(() => {
+                const container = document.getElementById('cubeParticles');
+                // Remove old cubes that have completed their animation
+                const oldCubes = container.querySelectorAll('.cube');
+                oldCubes.forEach(cube => {
+                    if (Math.random() < 0.3) { // Remove 30% of old cubes randomly
+                        cube.remove();
+                    }
+                });
+                
+                // Add new cubes
+                const currentCubes = container.querySelectorAll('.cube').length;
+                const targetCubes = Math.floor(container.offsetWidth / 38) * 3;
+                
+                for (let i = currentCubes; i < targetCubes; i++) {
+                    const cube = document.createElement('div');
+                    cube.className = 'cube';
+                    cube.style.left = Math.random() * container.offsetWidth + 'px';
+                    cube.style.animationDuration = (Math.random() * 7 + 8) + 's';
+                    cube.style.animationDelay = Math.random() * 2 + 's';
+                    container.appendChild(cube);
+                }
+            }, 3000);
+        }
+
+        // Theme functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize cube particles
+            initCubeParticles();
+            
+            // Recreate particles on window resize
+            window.addEventListener('resize', () => {
+                const container = document.getElementById('cubeParticles');
+                container.innerHTML = '';
+                setTimeout(createCubeParticles, 100);
+            });
+            const themeToggle = document.getElementById('theme-toggle');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+
+            // Check for saved theme preference or default to 'dark'
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+
+            // Apply the saved theme on page load
+            if (currentTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+
+            // Theme toggle functionality
+            themeToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                document.documentElement.classList.toggle('light');
+                
+                if (document.documentElement.classList.contains('dark')) {
+                    localStorage.setItem('theme', 'dark');
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                }
+            });
+
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileBackdrop = document.getElementById('mobile-backdrop');
+            const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+            const mobileSunIcon = document.getElementById('mobile-sun-icon');
+            const mobileMoonIcon = document.getElementById('mobile-moon-icon');
+            const mobileThemeText = document.getElementById('mobile-theme-text');
+
+            function openMobileMenu() {
+                mobileMenu.classList.add('open');
+                mobileBackdrop.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('open');
+                mobileBackdrop.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (mobileMenu.classList.contains('open')) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
+                }
+            });
+
+            // Mobile theme toggle
+            mobileThemeToggle.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                document.documentElement.classList.toggle('light');
+                
+                if (document.documentElement.classList.contains('dark')) {
+                    localStorage.setItem('theme', 'dark');
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                    mobileSunIcon.classList.remove('hidden');
+                    mobileMoonIcon.classList.add('hidden');
+                    mobileThemeText.textContent = 'Switch to Light Mode';
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                    mobileSunIcon.classList.add('hidden');
+                    mobileMoonIcon.classList.remove('hidden');
+                    mobileThemeText.textContent = 'Switch to Dark Mode';
+                }
+            });
+
+            // Update mobile theme icons on page load
+            if (currentTheme === 'dark') {
+                mobileSunIcon.classList.remove('hidden');
+                mobileMoonIcon.classList.add('hidden');
+                mobileThemeText.textContent = 'Switch to Light Mode';
+            } else {
+                mobileSunIcon.classList.add('hidden');
+                mobileMoonIcon.classList.remove('hidden');
+                mobileThemeText.textContent = 'Switch to Dark Mode';
+            }
+
+            // Close mobile menu when clicking on a link
+            const mobileLinks = mobileMenu.querySelectorAll('.mobile-nav-link');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMobileMenu();
+                });
+            });
+
+            // Close mobile menu when clicking backdrop
+            mobileBackdrop.addEventListener('click', () => {
+                closeMobileMenu();
+            });
+
+            // Close mobile menu on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                    closeMobileMenu();
+                }
+            });
+
+            // Smooth scrolling and active nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            // Update active nav link on scroll
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            // Intersection Observer for animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all animated elements
+            document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Add scroll effect to navbar
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector('nav');
+                if (window.scrollY > 50) {
+                    nav.classList.add('shadow-lg');
+                } else {
+                    nav.classList.remove('shadow-lg');
+                }
+            });
+        });
+
+        // Scroll to home function
+        function scrollToHome() {
+            document.getElementById('home').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        // Navigation functions
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Form validation function
+        function validateForm(form) {
+            let isValid = true;
+            const requiredFields = ['name', 'email', 'subject', 'message'];
+            
+            // Clear previous errors
+            form.querySelectorAll('.form-input').forEach(input => {
+                input.classList.remove('error');
+                const errorMsg = input.parentNode.querySelector('.error-message');
+                if (errorMsg) {
+                    errorMsg.remove();
+                }
+            });
+            
+            requiredFields.forEach(fieldName => {
+                const field = form[fieldName];
+                const value = field.value.trim();
+                
+                if (!value) {
+                    isValid = false;
+                    field.classList.add('error');
+                    
+                    // Create error message
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message';
+                    errorDiv.textContent = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required*`;
+                    
+                    // Insert error message after the input
+                    field.parentNode.appendChild(errorDiv);
+                }
+                
+                // Email validation
+                if (fieldName === 'email' && value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        isValid = false;
+                        field.classList.add('error');
+                        
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'error-message';
+                        errorDiv.textContent = 'Please enter a valid email address*';
+                        field.parentNode.appendChild(errorDiv);
+                    }
+                }
+            });
+            
+            return isValid;
+        }
+
+        // Form submission with EmailJS
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const formMessage = document.getElementById('form-message');
+            const form = event.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            
+            // Validate form first
+            if (!validateForm(form)) {
+                formMessage.className = 'block p-4 rounded-lg text-center font-medium bg-red-100 text-red-800';
+                formMessage.textContent = 'Please fill in all required fields correctly.';
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    formMessage.classList.add('hidden');
+                }, 5000);
+                
+                return;
+            }
+            
+          
+            // Show loading state
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+            formMessage.className = 'block p-4 rounded-lg text-center font-medium bg-blue-100 text-blue-800';
+            formMessage.textContent = 'Sending your message...';
+            
+            // Prepare email parameters
+            const name = form.name.value.trim();
+            const email = form.email.value.trim();
+            const subject = form.subject.value.trim();
+            const message = form.message.value.trim();
+
+                        
+            // Try to open email client
+            try {
+               emailjs.sendForm('service_sdwo602', 'template_cd3rmj4', form)
+                .then(function() {
+                    // Success
+                
+                // Show success message
+                setTimeout(() => {
+                    formMessage.className = 'block p-4 rounded-lg text-center font-medium bg-green-100 text-green-800';
+                    formMessage.textContent = 'Thank you for your message! Your email client should open to send the message.';
+                    
+                    // Reset form
+                    form.reset();
+                    
+                    // Reset button
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Send Message';
+                    
+                    // Hide message after 8 seconds
+                    setTimeout(() => {
+                        formMessage.classList.add('hidden');
+                    }, 8000);
+                }, 1000);
+                }).catch(function(error) {
+                    // Error
+                    formMessage.className = 'block p-4 rounded-lg text-center font-medium bg-red-100 text-red-800';
+                    formMessage.textContent = 'An error occurred while sending your message. Please try again later.';
+                    
+                    // Reset button
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Send Message';
+                    
+                    // Hide message after 8 seconds
+                    setTimeout(() => {
+                        formMessage.classList.add('hidden');
+                    }, 8000);
+                });
+            } catch (error) {
+                // Fallback if email client cannot be opened
+                formMessage.className = 'block p-4 rounded-lg text-center font-medium bg-red-100 text-red-800';
+                formMessage.textContent = 'Unable to open your email client. Please ensure you have a default email client set up.';
+
+                // Reset button
+                submitButton.disabled = false;
+                submitButton.textContent = 'Send Message';
+                
+                // Hide message after 10 seconds
+                setTimeout(() => {
+                    formMessage.classList.add('hidden');
+                }, 10000);
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+:root{
+  --bg:#0b0820;
+  --card-bg: rgba(255,255,255,0.05);
+  --glass: rgba(255,255,255,0.04);
+  --accent: #6c3fd1;
+  --muted: #9aa0b2;
+  --carousel-radius: 360; /* default for large screens */
+  --card-w: 240px;
+  --card-h: 320px;
+}
+
+/* Reset & base */
+*{box-sizing:border-box}
+html,body,#root {height:100%}
+body{
+  margin:0;
+  min-height:100vh;
+  background: radial-gradient(1200px 800px at 10% 10%, rgba(108,63,209,0.08), transparent),
+              linear-gradient(180deg,var(--bg), #060411 60%);
+  color:#f4f6fb;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow:hidden;
+}
+
+/* Background canvases */
+.bg-canvas{
+  position:fixed;
+  top:0; left:0;
+  width:100vw; height:100vh;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Faux cursor */
+.faux-cursor{
+  position:fixed;
+  width:32px; height:32px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,0.08);
+  transform:translate(-50%,-50%) scale(1);
+  pointer-events:none;
+  z-index:9999;
+  transition:transform .12s ease, opacity .12s ease;
+  opacity:0.6;
+  mix-blend-mode:screen;
+}
+
+/* Top bar */
+.topbar{
+  position:fixed;
+  top:12px; left:12px; right:12px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+  z-index:50;
+}
+.brand{ font-weight:700; letter-spacing:0.2px; margin:0; font-size:16px}
+.controls{ display:flex; gap:8px; align-items:center; background:var(--glass); padding:6px 8px; border-radius:12px; backdrop-filter: blur(6px) }
+.controls button, .controls select { background:transparent; color:inherit; border:0; padding:6px 8px; border-radius:8px; cursor:pointer }
+.controls select{ background:rgba(255,255,255,0.03); padding:6px }
+
+/* Layout */
+.main{
+  position:relative;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:24px;
+  padding:56px 20px;
+  z-index:10;
+}
+
+/* Carousel container */
+.carousel-wrap{
+  width:min(78vw, 1200px);
+  max-width:1200px;
+  height: min(64vh, 720px);
+  perspective:1600px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform-style: preserve-3d;
+  isolation:isolate;
+}
+
+/* the carousel (holds slides) */
+.carousel{
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style: preserve-3d;
+  transition: transform .6s cubic-bezier(.2,.8,.2,1);
+}
+
+/* Slide card */
+.carousel-slide{
+  --w: var(--card-w);
+  --h: var(--card-h);
+  width:var(--w);
+  height:var(--h);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%) translateZ(0);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border-radius:16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  padding:18px;
+  color: white;
+  text-align:center;
+  transition: transform .6s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, opacity .3s ease;
+  user-select:none;
+  -webkit-user-select:none;
+  cursor:grab;
+  transform-origin:center center;
+}
+.carousel-slide:active { cursor:grabbing; }
+.carousel-slide .slide-icon{ font-size:42px; display:block }
+.carousel-slide .slide-title{ font-weight:700; font-size:16px; margin-top:4px }
+.carousel-slide .slide-desc{ font-size:13px; color:var(--muted) }
+
+/* Active emphasis */
+.carousel-slide.active{
+  transform: translate(-50%,-50%) translateZ(160px) scale(1.06);
+  box-shadow: 0 22px 50px rgba(0,0,0,0.7), 0 2px 8px rgba(108,63,209,0.12);
+  z-index:20;
+  outline: 3px solid rgba(108,63,209,0.12);
+}
+
+/* Dots */
+.dot-nav{
+  position:absolute;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  z-index:30;
+}
+.dot{
+  width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.12);
+  border:0; padding:0; cursor:pointer; transition:transform .18s, background .18s;
+}
+.dot.active{ transform:scale(1.4); background:var(--accent) }
+
+/* Info panel (side) */
+.info-panel{
+  width:300px;
+  max-width:30vw;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  border-radius:12px;
+  padding:18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  z-index:20;
+}
+
+/* Footer */
+.footer{
+  position:fixed; bottom:8px; left:12px; color:var(--muted); font-size:12px; z-index:40;
+}
+
+/* Responsive adjustments */
+
+/* Tablet */
+@media (max-width: 900px){
+  :root{ --carousel-radius: 260; --card-w:200px; --card-h:280px }
+  .info-panel{ display:none }
+  .main{ padding:48px 12px }
+}
+
+/* Mobile */
+@media (max-width: 520px){
+  :root{ --carousel-radius: 160; --card-w:170px; --card-h:220px }
+  .topbar{ left:8px; right:8px; top:8px }
+  .carousel-wrap{ width:100vw; height:62vh; padding:0 }
+  .controls .brand { display:none }
+  .controls select{ display:none }
+}
+
+/* Accessibility: focus outlines */
+button:focus, .dot:focus, .carousel-slide:focus{
+  outline:2px solid rgba(108,63,209,0.28);
+  outline-offset:3px;
+}
+
+/* small polish */
+.carousel-slide:focus{ transform: translate(-50%,-50%) translateZ(140px) scale(1.03) }
